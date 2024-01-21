@@ -56,33 +56,36 @@ const Posts = () => {
   
 
   return (
-    <div className='flex flex-col flex-nonwrap justify-start space-y-7 mt-5 items-center'>
-      <div className="text-black text-4xl ml-1 mb-10 text-center items-center font-bold w-full">
-        <div className='flex flex-row items-center'>
-          <div>
-            <NavLink to="/">
-              <img
+    <div className='flex flex-col items-center space-y-7 mt-5'>
+      <div className="flex items-center justify-between w-full px-4">
+        {/* Left section with image */}
+        <div className="flex items-center">
+          <NavLink to="/">
+            <img
               src="https://upload.wikimedia.org/wikipedia/en/e/e1/International_Institute_of_Information_Technology%2C_Hyderabad_logo.png"
               alt="IIITH Logo"
-              className="w-28 h-auto mr-5"></img>
-            </NavLink>
-          </div>
-          <div>
-            {id} - {courseName}
-          </div>
-          <div>
-            <button
-              className="btn btn-success ml-3 text"
-              type="submit"
-              onClick={() => navigate(`/reviewform/${id}`)}>
-              + Add Review
-            </button>
-          </div>
+              className="w-28 h-auto mr-5"
+            />
+          </NavLink>
+        </div>
+
+        {/* Middle section with id - courseName */}
+        <div className="text-black text-4xl font-bold text-center">
+          {id} - {courseName}
+        </div>
+
+        {/* Right section with Add Review button */}
+        <div>
+          <button
+            className="btn btn-success text"
+            type="submit"
+            onClick={() => navigate(`/reviewform/${id}`)}
+          >
+            + Add Review
+          </button>
         </div>
       </div>
-<div>
 
-</div>
       {/* Center the grid and display one block per row with animation effect */}
       <div className="grid grid-cols-1 gap-4 mx-auto">
         {[...Array(6)].map((_, index) => (
