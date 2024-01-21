@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
   courseCode: {
@@ -28,7 +28,7 @@ const reviewSchema = new mongoose.Schema({
     default: false,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "User",
     required: true,
   },
@@ -38,6 +38,7 @@ const reviewSchema = new mongoose.Schema({
   },
 });
 
-const Review = mongoose.model("Review", reviewSchema);
+const Review = mongoose.model('Review', reviewSchema);
 
+module.exports = Review;
 // export default Review;
