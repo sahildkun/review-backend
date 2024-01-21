@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import jsonData from "../assets/indexed.json";
-
+import { useEffect } from "react";
 const ReviewForm = () => {
   const [isChecked, setIsChecked] = useState(true);
   const [textareaContent, setTextareaContent] = useState("");
   const maxWordLimit = 250;
   const id = useParams().id;
+  console.log(id);
   const getCourseNameById = (courseId) => {
     const course = jsonData[courseId];
     return course ? course.title : "Course Not Found";
@@ -15,6 +16,37 @@ const ReviewForm = () => {
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const [loadedUsers, setLoadedUsers] = useState();
+
+  const [instructors, setInstructors] = useState([]);
+  const [selectedInstructor, setSelectedInstructor] = useState('');
+
+  useEffect(() => {
+    const sendRequest = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`http://localhost:5000/api/courses/${id}`);
+        
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+
+        const responseData = await response.json();
+        console.log(responseData.course.instructors);
+        setInstructors(responseData.course.instructors);
+      
+        
+        // setLoadedUsers(responseData.users);
+      } catch (err) {
+        setError(err.message);
+      }
+      setIsLoading(false);
+    };
+    sendRequest();
+  }, []);
 
   const handleTextareaChange = (event) => {
     const content = event.target.value;
@@ -37,7 +69,7 @@ const ReviewForm = () => {
         </div>
         <textarea
           placeholder="Mention workload, grade cutoffs, paper-patterns, course difficulty etc.."
-          className="textarea textarea-bordered textarea-lg w-[50vw] h-[25vw] resize-none bg-white border border-black mt-4 p-4"
+          className=" text-black textarea textarea-bordered textarea-lg w-[50vw] h-[25vw] resize-none bg-white border border-black mt-4 p-4"
           value={textareaContent}
           onChange={handleTextareaChange}
         ></textarea>
@@ -58,7 +90,11 @@ const ReviewForm = () => {
             <option value="" disabled selected>
               Select instructor
             </option>
-            {/* ... (options) */}
+            {instructors.map((instructor, index) => (
+          <option key={index} value={instructor}>
+            {instructor}
+          </option>
+        ))}
           </select>
           {/* Validation message for instructor */}
         </div>
@@ -68,13 +104,16 @@ const ReviewForm = () => {
             <option disabled selected>
               Select semester
             </option>
-            {/* ... (options) */}
+            <option>Summer</option>
+            <option>Monsoon</option>
           </select>
           <select className="select select-info w-auto bg-white text-black" required>
             <option disabled selected>
               Select year
             </option>
-            {/* ... (options) */}
+            
+             <option>2023</option>
+             <option>2024</option>
           </select>
           {/* Validation message for semester and year */}
         </div>
