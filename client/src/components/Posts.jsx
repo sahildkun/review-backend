@@ -18,20 +18,24 @@ const Posts = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [loadedUsers, setLoadedUsers] = useState();
+  const [reviews, setReviews] = useState([]);
+
 
   useEffect(() => {
     const sendRequest = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:5000/api/courses/CS4.404');
+        let url = 'http://localhost:5000/api/courses/' + id + '/reviews'
+        const response = await fetch(url);
         
         if (!response.ok) {
           throw new Error(responseData.message);
         }
 
         const responseData = await response.json();
-        console.log(responseData);
-
+        // reviews = responseData['reviews'];
+        console.log(responseData['reviews'][0]);
+        setReviews(responseData.reviews);
         
         // setLoadedUsers(responseData.users);
       } catch (err) {
@@ -88,15 +92,15 @@ const Posts = () => {
 
       {/* Center the grid and display one block per row with animation effect */}
       <div className="grid grid-cols-1 gap-4 mx-auto">
-        {[...Array(6)].map((_, index) => (
-          <div
-            key={index}
-            className="bg-black rounded-md shadow-md transition-transform transform hover:scale-105"
-            style={{ width: '800px', margin: '0 auto', marginBottom: '20px' }}
-          >
-            <Post />
-          </div>
-        ))}
+      {reviews.map((review, index) => (
+        <div
+          key={index}
+          className="bg-black rounded-md shadow-md transition-transform transform hover:scale-105"
+          style={{ width: '800px', margin: '0 auto', marginBottom: '20px' }}
+        >
+          <Post review={review} />
+        </div>
+      ))}
       </div>
     </div>
   );
