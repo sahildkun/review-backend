@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 const HttpError = require('./models/http-error');
 const courseRouter = require('./router/courseRouter');
 const userRouter = require('./router/authRouter')
+require('dotenv').config()
 
+// console.log(process.env);
 const app = express();
 
 app.use(bodyParser.json());
@@ -29,6 +31,7 @@ app.use((error, req, res, next) => {
 mongoose
 .connect('mongodb+srv://bassamadnan:olay2013@courses.u6l9lqn.mongodb.net/?retryWrites=true&w=majority')
 .then(() => {
+  console.log("listening on 5000");
   app.listen(5000);
 })
 .catch((error) => {
