@@ -4,7 +4,7 @@ const reviewSchema = new mongoose.Schema({
   courseCode: {
     type: String,
     required: true,
-    ref: "Course", // Reference to the Course model using the code field
+    ref: 'Course', // Reference to the Course model using the code field
   },
   reviewContent: {
     type: String,

@@ -2,6 +2,20 @@ const courseData = require('../indexed.json');
 const Course = require('../models/courseModel');
 const HttpError = require('../models/http-error');
 
+
+
+const getAllCourses = async (req,res,next) => { 
+    
+  let courses;
+  try {
+    courses = await Course.find();
+    console.log("Courses fetched successfully");
+  } catch (error) {
+    logger.error("Error during course fetch:", error);
+  }
+  res.status(200).json({courses:courses});
+}
+
 const getCourseById = async (req,res,next) => {
     const cid = req.params.courseId;
 console.log(cid);
@@ -100,3 +114,4 @@ const createCourse = async (req,res,next) => {
 exports.getCourseById = getCourseById;
 exports.getCourseByProfId = getCourseByProfId;
 exports.createCourse = createCourse;
+exports.getAllCourses = getAllCourses;

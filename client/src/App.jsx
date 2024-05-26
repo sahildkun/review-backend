@@ -22,7 +22,7 @@ import Navbar2 from './components/Navbar2'
 import { useEffect } from 'react'
 import { AuthContext } from './context/auth-context'
 import { useCallback } from 'react'
-
+import Courses from './pages/Courses'
 
 // fetch('/api/v1/test').then( (res) => res.json()).then((data) => console.log(data));
 
@@ -72,6 +72,12 @@ const router = createBrowserRouter([
       <ReviewForm />
     )
   },
+  {
+    path:'/courses',
+    element: (
+      <Courses/>
+    )
+  }
 ]);
 
 function App() {

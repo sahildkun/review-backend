@@ -1,51 +1,100 @@
-const { StatusCodes } = require('http-status-codes');
+// const { StatusCodes } = require('http-status-codes');
+const {validationResult} = require('express-validator')
 const User = require('../models/userModel.js');
 const { HttpError } = require('../models/http-error.js');
-const jwt = require('jsonwebtoken');
 
-const generateToken = (userId) => {
-  // Replace 'yourSecretKey' with a strong secret key for signing the token
-  const token = jwt.sign({ userId }, 'yourSecretKey', { expiresIn: '1h' });
-  return token;
-};
 
-exports.signup = async (req, res) => {
+const getUsers = async (req, res, next) => {
+  let users;
+  try {
+    users = await User.find({}, '-password');
+  } catch (err) {
+    const error = new HttpError(
+      'Fetching users failed, please try again later.',
+      500
+    );
+    return next(error);
+  }
+  res.json({ users: users.map(user => user.toObject({ getters: true })) });
+
+}
+
+
+const signup = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError('Invalid inputs passed, please check your data.', 422));
+  }
+
   const { name, email, password } = req.body;
 
+  let existingUser;
   try {
-    // Check if the user with the given email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      throw new HttpError('Email is already in use');
-    }
-
-    // If the email is not taken, create a new user
-    const user = await User.create({ name, email, password });
-    const token = generateToken(user._id);
-    res.status(StatusCodes.CREATED).json({ user, token });
-
-  } catch (error) {
-    console.error(error);
-    res.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message || 'Internal Server Error' });
+    existingUser = await User.findOne({ email: email });
+  } catch (err) {
+    const error = new HttpError(
+      'Signing up failed, please try again later.',
+      500
+    );
+    return next(error);
   }
-};
 
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  if (existingUser) {
+    const error = new HttpError(
+      'User exists already, please login instead.',
+      422
+    );
+    return next(error);
+  }
+
+  const createdUser = new User({
+    name,
+    email,
+    password,
+    image: 'https://www.abc.net.au/news/image/8314104-3x2-940x627.jpg',
+    role: 'user',
+    reviews: []
+  });
 
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      throw new HttpError('Login failed');
-    }
-    if (user.password !== password) {
-      throw new HttpError('Login failed');
-    }
-    const token = generateToken(user._id);
-
-    res.status(StatusCodes.OK).json({ message: 'Login successful', token });
-  } catch (error) {
-    console.error(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    await createdUser.save();
+  } catch (err) {
+    const error = new HttpError(
+      'Signing up failed, please try again.',
+      500
+    );
+    return next(error);
   }
-};
+
+  res.status(201).json({user: createdUser.toObject({ getters: true })});
+}
+
+const login = async (req, res, next) => {   
+  const   {email, password} = req.body;
+    let existingUser;
+    try {
+      existingUser = await User.findOne({ email: email });
+
+}catch (err) {
+  const error = new HttpError(
+    'Logging in failed, please try again later.',
+    500
+  );
+  return next(error);
+}   
+
+if(!existingUser || existingUser.password !== password){
+  const error = new HttpError(
+    'Invalid credentials, could not log you in.',
+    401
+  );
+  return next(error);
+}
+
+res.json({message: 'Logged in!'});
+}
+
+
+exports.getUsers = getUsers;  
+exports.signup = signup;    
+exports.login = login;

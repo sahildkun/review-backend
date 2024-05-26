@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         enum:['user', 'admin'],
         default: 'user'
     },
+    reviews: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
+    }]
 });
 
 const User = mongoose.model('User', userSchema);

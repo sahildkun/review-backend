@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import jsonData from "../assets/indexed.json";
 import { useEffect } from "react";
+
 const ReviewForm = () => {
   const [isChecked, setIsChecked] = useState(true);
   const [textareaContent, setTextareaContent] = useState("");
@@ -29,7 +30,7 @@ const ReviewForm = () => {
       setIsLoading(true);
       try {
         const response = await fetch(`http://localhost:5000/api/courses/${id}`);
-        
+
         if (!response.ok) {
           throw new Error(responseData.message);
         }
@@ -37,8 +38,8 @@ const ReviewForm = () => {
         const responseData = await response.json();
         console.log(responseData.course.instructors);
         setInstructors(responseData.course.instructors);
-      
-        
+
+
         // setLoadedUsers(responseData.users);
       } catch (err) {
         setError(err.message);
@@ -59,8 +60,48 @@ const ReviewForm = () => {
     }
   };
 
+  const [formData, setFormData] = useState({
+    instructor: '',
+    isAnonymous: false,
+    semester: '',
+    userId: '123',
+    reviewContent: '',
+    year: '',
+  });
+  // Handler for input changes
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : (name === 'year' ? parseInt(value) : value),
+    });
+  };
+
+  const submitReview = async (e) => {
+    
+    //  const response = {textareaContent,courseName,instructors,isChecked}
+    console.log('Form Data:', formData);
+
+    e.preventDefault();
+    const courseId = id; // Replace with actual course ID if necessary
+    try {
+      const response = await fetch(`http://localhost:5000/api/courses/${courseId}/add-review`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      console.log('Response:', result);
+    } catch (error) {
+      console.error('Error submitting the form:', error);
+    }
+  }
+
   return (
-    <div className="flex flex-row gap-9 justify-center items-center h-screen">
+    <form onSubmit={submitReview} className="flex flex-row gap-9 justify-center items-center h-screen">
       <div className="flex flex-col relative">
         <div className="label">
           <span className="label-text text-2xl text-black font-bold">
@@ -68,10 +109,11 @@ const ReviewForm = () => {
           </span>
         </div>
         <textarea
+          name="reviewContent"
           placeholder="Mention workload, grade cutoffs, paper-patterns, course difficulty etc.."
           className=" text-black textarea textarea-bordered textarea-lg w-[50vw] h-[25vw] resize-none bg-white border border-black mt-4 p-4"
-          value={textareaContent}
-          onChange={handleTextareaChange}
+          value={formData.reviewContent}
+          onChange={handleChange}
         ></textarea>
 
         <div className="text-gray-500 absolute bottom-0 right-0 mr-4 mb-4">
@@ -86,34 +128,46 @@ const ReviewForm = () => {
 
       <div className="grid grid-rows-4 gap-5">
         <div>
-          <select className="select select-info w-auto bg-white text-black" required>
-            <option value="" disabled selected>
+          <select
+            onChange={handleChange}
+            name="instructor"
+            value={formData.instructor}
+            className="select select-info w-auto bg-white text-black" required>
+            <option value="" disabled>
               Select instructor
             </option>
             {instructors.map((instructor, index) => (
-          <option key={index} value={instructor}>
-            {instructor}
-          </option>
-        ))}
+              <option key={index} value={instructor}>
+                {instructor}
+              </option>
+            ))}
           </select>
           {/* Validation message for instructor */}
         </div>
 
         <div className="label gap-9">
-          <select className="select select-info w-auto bg-white text-black" required>
-            <option disabled selected>
+          <select 
+          onChange={handleChange}
+          name="semester"
+          value={formData.semester}
+          className="select select-info w-auto bg-white text-black" required>
+            <option value={""} disabled >
               Select semester
             </option>
-            <option>Summer</option>
+            <option>Spring</option>
             <option>Monsoon</option>
           </select>
-          <select className="select select-info w-auto bg-white text-black" required>
-            <option disabled selected>
+          <select 
+          onChange={handleChange}
+          name="year"
+          value={formData.year}
+          className="select select-info w-auto bg-white text-black" required>
+            <option value={""} disabled  >
               Select year
             </option>
-            
-             <option>2023</option>
-             <option>2024</option>
+
+            <option>2023</option>
+            <option>2024</option>
           </select>
           {/* Validation message for semester and year */}
         </div>
@@ -123,8 +177,9 @@ const ReviewForm = () => {
             <span className="label-text text-left text-black">Post as anonymous</span>
             <input
               type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
+              name="isAnonymous"
+              checked={FormData.isAnonymous}
+              onChange={handleChange}
               className="checkbox border-2 border-black"
             />
           </label>
@@ -133,12 +188,13 @@ const ReviewForm = () => {
           <button
             className="btn btn-wide btn-outline btn-primary btn-success mt-4"
             type="submit"
+
           >
             Post
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
