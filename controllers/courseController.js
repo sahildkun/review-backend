@@ -26,11 +26,16 @@ console.log(cid);
         code:cid
       })
       console.log(course);
-    } catch (error) {
-      const err = new HttpError(`no course with code ${course}`,404);
+    } catch (err) {
+      const error = new HttpError(`no course with code ${course}`,404);
 
-      return next(err)
+      return next(error)
     }
+
+    if (!course) {
+      const error = new HttpError('Could not find a course for the provided id', 404);
+      return next(error);
+  }
     
     res.json({course: course})
 }

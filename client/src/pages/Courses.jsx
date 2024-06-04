@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CourseNavbar from '../components/CourseNavbar';
+import Card from '../components/ui/Card';
+import { NavLink } from 'react-router-dom';
+
 const Courses = () => {
     // State to store the courses data
     const [courses, setCourses] = useState(null);
@@ -10,12 +13,7 @@ const Courses = () => {
         axios.get('http://localhost:5000/api/courses')
             .then(response => {
                 // Handle successful response
-                console.log('Data:', response.data.courses);
-                // Update the courses state with the data from the API response
                 setCourses(response.data.courses);
-
-                console.log('Courses:', courses);
-                
             })
             .catch(error => {
                 // Handle error
@@ -23,28 +21,42 @@ const Courses = () => {
             });
     }, []); // Empty dependency array ensures the effect runs only once on component mount
 
+
+    // Function to generate a random image URL
+    const getRandomImageUrl = () => {
+        const width = 300;
+        const height = 200;
+        return `https://picsum.photos/${width}/${height}?blur=2?random=${Math.floor(Math.random() * 1000)}`;
+    };
     return (
-        <>
-         <CourseNavbar />
-        <div className='text-black'>
-           
-            {
-                // Check if courses data is available
-                courses ? 
-                    // Render courses if available
-                   <>
-                   {courses.map(course => (
-                          <div key={course._id}>
-                               <h2>{course.code}</h2>
-                               <p>{course.name}</p>
-                               <p>{course.instructors}</p>
-                          </div>
-                   ))}
-                   </>
-                    // Render loading message while data is being fetched
-                    : <div className='text-black'>loading...</div>
-            }
-        </div>
+        <>  
+        <div className='bg-white shadow-2xl'>
+            <CourseNavbar />
+            </div>
+            <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-8 p-4 md:p-10 transition-colors duration-300 ease-in-out bg-white text-gray-900">
+                <div className='text-black grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center'>
+                    {
+                        // Check if courses data is available
+                        courses ?
+                            // Render courses if available
+                            courses.map(course => (
+                                <div key={course._id} className='w-full h-full'>
+                                    <NavLink className={'text-black'} to={`/posts/${course.code}`}>
+                                    <Card
+                                        
+                                        courseCode={course.code}
+                                        courseName={course.title}
+                                        instructors={course.instructors}
+                                        
+                                    />
+                                    </NavLink>
+                                </div>
+                            ))
+                            // Render loading message while data is being fetched
+                            : <div className='text-black'>loading...</div>
+                    }
+                </div>
+            </main>
         </>
     );
 }
