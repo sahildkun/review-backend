@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import AutocompleteComponent from './components/AutoCompleteComponent'
-import {  RouterProvider, createBrowserRouter} from 'react-router-dom';
+import {  Outlet, RouterProvider, createBrowserRouter} from 'react-router-dom';
 import Avatar from './components/Avatar'
 import Post from './components/Post'
 import PostLoading from './components/PostLoading'
@@ -23,24 +23,18 @@ import { useEffect } from 'react'
 import { AuthContext } from './context/auth-context'
 import { useCallback } from 'react'
 import Courses from './pages/Courses'
+import RegisterButton from './components/RegisterButton'
+import NavigationMenu from './components/Navbar2'
 
 // fetch('/api/v1/test').then( (res) => res.json()).then((data) => console.log(data));
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element:<Navbar2/>,
+    element: <AutocompleteComponent/>,
+      
+   
     children: [  
-      {
-        index: true,
-        element:(
-          <div className='flex flex-col h-96'>
-    
-            <AutocompleteComponent/>
-    
-          </div>
-        ),
-      },
       {
         path:'add-course',
         element: <Form/>

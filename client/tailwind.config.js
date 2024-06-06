@@ -1,16 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {},
-  },
+    content: ['./src/**/*.{astro,html,svelte,vue,js,ts,jsx,tsx}'],
+  plugins: [require('daisyui')],
+  theme: {extend: {}},
   daisyui: {
-    base:true,
-    themes: ["light", "dark", "cupcake", "synthwave"],
+    themes: ['winter', 'night']
   },
-  plugins: [require("daisyui")],
+  darkMode: ['class', '[data-theme="night"]']
 }
 

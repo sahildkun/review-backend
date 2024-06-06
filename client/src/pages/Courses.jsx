@@ -3,6 +3,7 @@ import axios from 'axios';
 import CourseNavbar from '../components/CourseNavbar';
 import Card from '../components/ui/Card';
 import { NavLink } from 'react-router-dom';
+import RegisterButton from '../components/RegisterButton';
 
 const Courses = () => {
     // State to store the courses data
@@ -32,6 +33,7 @@ const Courses = () => {
         <>  
         <div className='bg-white shadow-2xl'>
             <CourseNavbar />
+            
             </div>
             <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-8 p-4 md:p-10 transition-colors duration-300 ease-in-out bg-white text-gray-900">
                 <div className='text-black grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center'>
