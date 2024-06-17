@@ -1,12 +1,14 @@
-import { Link, NavLink, redirect } from "react-router-dom";
+import { Link, NavLink, redirect, useNavigate } from "react-router-dom";
 
 import { useState } from "react";
+import { useAuth } from "../context/auth-context";
 
 
 
 
 const LoginForm = () => {
 
+    const navigate = useNavigate();
     const onChangeHandler = (e) => {
         setFormData({
             ...formData,
@@ -14,39 +16,47 @@ const LoginForm = () => {
 
         })
     }
-
+    const {storeTokenInLocalStorage} = useAuth();
     //submit form handler 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         console.log('Form Data:', formData);
-         try {
-        const respponse = await fetch('http://localhost:5000/api/user/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+        try {
+            const response = await fetch('http://localhost:5000/api/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                const responseData = await response.json();
 
-        const responseData = await respponse.json();    
-        console.log(responseData);
-         }
-         catch (error){
-                console.error(error);
-
-
-         }
-
-        
-        setFormData(
-            {
-                name: '',
-                email: '',
-                password: '',
-                isAdmin: false
+                console.log(responseData);
+                storeTokenInLocalStorage(responseData.token)
+                setFormData(
+                    {
+                  
+                        email: '',
+                        password: '',
+                      
+                    }
+                )
+                
+                alert(('Login Successfull'));
+                // navigate('/courses')
             }
-        )
-        redirect('/courses');
+
+        }
+        catch (error) {
+            alert("Invalid credential")
+            console.error(error);
+
+
+        }
+
+
+   
     }
 
     const [formData, setFormData] = useState(

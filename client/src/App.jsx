@@ -76,21 +76,15 @@ const router = createBrowserRouter([
 
 function App() {
 
-  const [islogged, setIslogged] = useState(false);
-  const logIn = useCallback (() => {setIslogged(true)},[])
-  const logOut = useCallback (() => {setIslogged(false)},[])
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
-  const [loadedUsers, setLoadedUsers] = useState();
+
 
  
 
   console.log('sahil');
 
   return (
-    <AuthContext.Provider value={{islogged: islogged, logIn:logIn,logOut:logOut} } >
      <RouterProvider  router={router}/>
-     </AuthContext.Provider>
+ 
     )
 }
 

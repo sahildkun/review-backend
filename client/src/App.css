@@ -1,0 +1,11 @@
+/* Custom styles for <option> elements */
+.select option {
+    background-color: transparent; /* Change background color */
+    margin: auto;/* Change text color */
+    padding: 20px; /* Adjust padding */
+  }
+  
+  .select option:hover {
+    background-color: transparent; /* Change background color on hover */
+  }
+  

@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import jsonData from "../assets/indexed.json";
 import { useEffect } from "react";
+import { Rating } from 'react-simple-star-rating'
+import '../App.css';  
 
 const ReviewForm = () => {
   const [isChecked, setIsChecked] = useState(true);
   const [textareaContent, setTextareaContent] = useState("");
   const maxWordLimit = 250;
   const id = useParams().id;
+
+  const navigate = useNavigate();
   console.log(id);
   const getCourseNameById = (courseId) => {
     const course = jsonData[courseId];
@@ -70,7 +74,9 @@ const ReviewForm = () => {
   });
   // Handler for input changes
   const handleChange = (e) => {
+   
     const { name, value, type, checked } = e.target;
+  
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : (name === 'year' ? parseInt(value) : value),
@@ -95,6 +101,8 @@ const ReviewForm = () => {
 
       const result = await response.json();
       console.log('Response:', result);
+
+      navigate(`/posts/${id}`)
     } catch (error) {
       console.error('Error submitting the form:', error);
     }
@@ -104,14 +112,16 @@ const ReviewForm = () => {
     <form onSubmit={submitReview} className="flex flex-row gap-9 justify-center items-center h-screen">
       <div className="flex flex-col relative">
         <div className="label">
-          <span className="label-text text-2xl text-black font-bold">
+          <span className="label-text text-3xl  font-bold">
             {id} - {courseName}
+          
           </span>
         </div>
         <textarea
           name="reviewContent"
           placeholder="Mention workload, grade cutoffs, paper-patterns, course difficulty etc.."
-          className=" text-black textarea textarea-bordered textarea-lg w-[50vw] h-[25vw] resize-none bg-white border border-black mt-4 p-4"
+          className=" bg-transparent textarea textarea-bordered textarea-lg w-[50vw] h-[25vw] resize-none border-2 mt-4 p-4"
+          // value={}
           value={formData.reviewContent}
           onChange={handleChange}
         ></textarea>
@@ -126,13 +136,13 @@ const ReviewForm = () => {
         </div>
       </div>
 
-      <div className="grid grid-rows-4 gap-5">
+      <div className="grid grid-rows-5 space-y-6 ">
         <div>
           <select
             onChange={handleChange}
             name="instructor"
             value={formData.instructor}
-            className="select select-info w-auto bg-white text-black" required>
+            className="select select-info w-full bg-transparent font-semibold" required>
             <option value="" disabled>
               Select instructor
             </option>
@@ -145,23 +155,26 @@ const ReviewForm = () => {
           {/* Validation message for instructor */}
         </div>
 
-        <div className="label gap-9">
+        <div className="label grid grid-cols-2  gap-2">
+        
           <select 
           onChange={handleChange}
           name="semester"
           value={formData.semester}
-          className="select select-info w-auto bg-white text-black" required>
-            <option value={""} disabled >
+          className="select select-info w-auto bg-transparent font-semibold" required>
+            
+            <option  value={""} disabled >
               Select semester
+             
             </option>
-            <option>Spring</option>
-            <option>Monsoon</option>
+            <option >Spring</option>
+            <option >Monsoon</option>
           </select>
           <select 
           onChange={handleChange}
           name="year"
           value={formData.year}
-          className="select select-info w-auto bg-white text-black" required>
+          className="select select-info  bg-transparent font-semibold" required>
             <option value={""} disabled  >
               Select year
             </option>
@@ -174,23 +187,29 @@ const ReviewForm = () => {
 
         <div className="form-control mt-2">
           <label className="label cursor-pointer">
-            <span className="label-text text-left text-black">Post as anonymous</span>
+            <span className="label-text text-left ">Post as anonymous</span>
             <input
               type="checkbox"
               name="isAnonymous"
               checked={FormData.isAnonymous}
               onChange={handleChange}
-              className="checkbox border-2 border-black"
+              className="checkbox border-2 "
             />
           </label>
         </div>
+
+    
+    
+   
+        
         <div>
           <button
-            className="btn btn-wide btn-outline btn-primary btn-success mt-4"
+            className="btn  btn-outline btn-primary btn-success mt-4  w-full"
             type="submit"
-
+            disabled={formData.instructor === '' || formData.semester === '' || formData.year === '' || formData.reviewContent === ''}
+    
           >
-            Post
+            Submit Review
           </button>
         </div>
       </div>

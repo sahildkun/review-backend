@@ -1,11 +1,12 @@
 import React from 'react';
 import Post from './Post';
 import jsonData from "../assets/indexed.json";
-import { useEffect ,useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 
 
 import axios from 'axios'
+import CourseCard from './CourseCard';
 const Posts = () => {
   const id = useParams().id;
   const getCourseNameById = (courseId) => {
@@ -14,7 +15,7 @@ const Posts = () => {
   };
   const courseName = getCourseNameById(id);
   const navigate = useNavigate();
- 
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [loadedUsers, setLoadedUsers] = useState();
@@ -27,7 +28,7 @@ const Posts = () => {
       try {
         let url = 'http://localhost:5000/api/courses/' + id + '/reviews'
         const response = await fetch(url);
-        
+
         if (!response.ok) {
           throw new Error(responseData.message);
         }
@@ -36,7 +37,7 @@ const Posts = () => {
         // reviews = responseData['reviews'];
         console.log(responseData['reviews'][0]);
         setReviews(responseData.reviews);
-        
+
         // setLoadedUsers(responseData.users);
       } catch (err) {
         setError(err.message);
@@ -47,7 +48,7 @@ const Posts = () => {
   }, []);
 
 
-  
+
   // if (isLoading) {
   //   return <p>Loading...</p>;
   // }
@@ -57,52 +58,70 @@ const Posts = () => {
   // }
 
   // console.log(data);
-  
+
 
   return (
-    <div className='flex flex-col items-center space-y-7 mt-5'>
-      <div className="flex items-center justify-between w-full px-4">
+    <>
+    <div className='flex flex-col items-center space-y-7 p-3'>
+      <div className="flex items-center justify-between w-full">
         {/* Left section with image */}
         <div className="flex items-center">
-          <NavLink to="/">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/en/e/e1/International_Institute_of_Information_Technology%2C_Hyderabad_logo.png"
-              alt="IIITH Logo"
-              className="w-28 h-auto mr-5"
-            />
-          </NavLink>
+          <NavLink to={'/'}>
+        <button className="font-extrabold text-3xl  text-blue-700 dark:text-white tracking-tighter">Review.iiith</button>
+        </NavLink>
+
         </div>
 
         {/* Middle section with id - courseName */}
-        <div className="text-black text-4xl font-bold text-center">
-          {id} - {courseName}
+        <div className=" text-4xl font-bold text-center tracking-tighter">
+          {courseName} ({id})
         </div>
 
         {/* Right section with Add Review button */}
-        <div>
+        <div></div>
+        {/* <div>
           <button
             className="btn btn-success text"
             type="submit"
-            onClick={() => navigate(`/reviewform/${id}`)}
+          
           >
             + Add Review
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Center the grid and display one block per row with animation effect */}
-      <div className="grid grid-cols-1 gap-4 mx-auto">
-      {reviews.map((review, index) => (
-        <div
-          key={index}
-          className="bg-black rounded-md shadow-md transition-transform transform hover:scale-105"
-          style={{ width: '800px', margin: '0 auto', marginBottom: '20px' }}
-        >
-          <Post review={review} />
+      <div className="max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid md:grid-cols-3 gap-8">
+        <div className='col-span-2 space-y-2'>
+          <div className=' p-2'>
+            <h1 className='text-2xl font-bold'>Reviews</h1>
+          </div>
+          {reviews.map((review, index) => (
+            <div
+              key={index}
+              className="bg-transparent  rounded-md "
+
+            >
+
+
+
+
+              <Post review={review} />
+
+
+            </div>
+          ))}
         </div>
-      ))}
+        <div>
+        <CourseCard
+        courseCode={id}
+        courseName={courseName}
+
+        />
+        </div>
       </div>
     </div>
+    </>
   );
 };
 

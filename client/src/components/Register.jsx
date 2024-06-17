@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/auth-context";
 
 const Register = () => {
 
@@ -11,6 +12,8 @@ const Register = () => {
       isAdmin: false
     }
     )
+   const navigate = useNavigate();
+    const {storeTokenInLocalStorage} = useAuth()
 
 
     const onChangeHandler = (e) => {
@@ -33,19 +36,25 @@ const Register = () => {
                 },
                 body: JSON.stringify(formData)
             });
+
+            if(!response.ok){   
             const responseData = await response.json();
             console.log(responseData);
+            storeTokenInLocalStorage(responseData.token)
+            setFormData(
+                {
+                    name: '',
+                    email: '',
+                    password: '',
+                    isAdmin: false
+                  }
+            )
+            navigate('/login')
+            }
         } catch (error) {
             console.error(error);
         }
-        setFormData(
-            {
-                name: '',
-                email: '',
-                password: '',
-                isAdmin: false
-              }
-        )
+     
       
     }
   

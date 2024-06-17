@@ -15,7 +15,7 @@ const NavigationMenu = () => {
           <div className="navbar-start">
 
         
-            <h1 className="font-serif text-3xl">Review Portal IIIT-H</h1>
+            <button className="font-extrabold text-3xl  text-blue-700 dark:text-white tracking-tighter">Review.iiith</button>
           </div>
 
           <div className="navbar-end">

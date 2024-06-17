@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import jsonData from "../assets/indexed.json";
 import { Link, useNavigate } from "react-router-dom";
 import NavigationMenu from "./Navbar2";
@@ -25,7 +25,7 @@ const AutocompleteComponent = () => {
             <div className="flex flex-col justify-center space-y-4">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter text-black dark:text-white  sm:text-5xl   xl:text-6xl/none">
-                  Find the Best Courses for You
+                  Find the Best <Link to={'/courses'} className="text-blue-600 hover:underline ">Courses</Link> for You
                 </h1>
                 <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
                   Discover top-rated courses, read reviews, and find the perfect fit for your educational goals.
@@ -45,7 +45,7 @@ const AutocompleteComponent = () => {
                       <option key={code} value={`${code} - ${title}`} />
                     ))}
                   </datalist>
-                  <button className=" ml-10 hover:text-[#535bf2]   inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300" type="submit" onClick={() => navigate(`/posts/${code}`)}>
+                  <button className=" ml-10 hover:text-[#ffffff]   inline-flex h-10 items-center justify-center rounded-md  px-8 text-sm font-medium  shadow transition-colors hover:bg-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 bg-gray-50 text-gray-900 dark:hover:bg-black dark:hover:text-white dark:focus-visible:ring-gray-300" type="submit" onClick={() => navigate(`/posts/${code}`)}>
                     Search
                   </button>
                 </div>
@@ -53,8 +53,7 @@ const AutocompleteComponent = () => {
               </div>
             </div>
             <img
-              src="https://imgs.search.brave.com/xvvGnk0zqBUA0YmR20NLpPn8WZfA1iqs6ozKyPO-0B4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNjI2/NDY0MTU4L3Bob3Rv/L2NhdC13aXRoLW9w/ZW4tbW91dGguanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPVFy/OURDVmt3S21fZHpm/amtlTjVmb0NCcDdj/M0VmQkZfaTJBMGV0/WWlKT0E9"
-              width="550"
+              src='/courses2.jpg'
               height="550"
               alt="Hero"
               className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
